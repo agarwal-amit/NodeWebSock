@@ -1,0 +1,101 @@
+<!DOCTYPE>
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+<style>
+.redBorder {
+  border-style: solid;
+  border-color: red;
+}
+</style>
+
+<script type="text/javascript" src="script/webcomponents.js"></script>
+<script type="text/javascript">
+var sock = new WebSocket("ws://localhost:8080");
+//sock.onopen = function(event) {
+//  sock.send("hello from client");
+//};
+
+sock.onmessage = function (event) {
+  console.log("Got server message");
+  document.getElementById('content').innerHTML = event.data;
+  sock.close();
+}
+
+if(localStorage.visitCount) {
+  localStorage.visitCount = localStorage.visitCount+1;
+}else{
+  localStorage.visitCount=1;
+}
+
+if(sessionStorage.visitCount) {
+  sessionStorage.visitCount = sessionStorage.visitCount+1;
+}else{
+  sessionStorage.visitCount=1;
+}
+//alert(localStorage.visitCount);
+//alert(sessionStorage.visitCount);
+
+
+//Create the element from the form element
+var UserFormElementProto = Object.create(HTMLFormElement.prototype);
+
+//Define the html of the element
+UserFormElementProto.createdCallback = function() {
+  this.innerHTML = '<form class="userForm"><input type="text" name="name" placeholder="User Name" /><input type="number" name="age" placeholder="Age" /><input type="submit" value="Save" id="userSave"></form>';
+};
+
+//Register the element
+var UserFormElement = document.registerElement('user-form', {prototype: UserFormElementProto});
+
+
+//Now use it either by document.body.append(new UserFormElement()) or decleratively as <user-form></user-form>
+
+</script>
+</head>
+<body>
+	<div id="content"></div>
+  <math xmlns="http://www.w3.org/1998/Math/MathML">
+    <mrow>
+      <msup><mi>a</mi><mn>2</mn></msup>
+      <mo>+</mo>
+      <msup><mi>b</mi><mn>2</mn></msup>
+      <mo>=</mo>
+      <msup><mi>c</mi><mn>2</mn></msup>
+    </mrow>
+  </math>
+
+<user-form></user-form>
+<div class="container col-lg-4 col-md-6">
+<div class="redBorder col-lg-4 col-md-6">1</div>
+<div class="redBorder col-lg-4 col-md-6">2</div>
+<div class="redBorder col-lg-4 col-md-6">3</div>
+<div class="redBorder col-lg-4 col-md-6 col-md-offset-1 col-lg-offset-0">4</div>
+<div class="redBorder col-lg-4 col-md-6 hidden-md">5</div>
+<div class="redBorder col-lg-4 col-md-6">6</div>
+<div class="redBorder col-lg-4 col-md-6">7</div>
+<div class="redBorder col-lg-4 col-md-6">8</div>
+<div class="redBorder col-lg-4 col-md-6">9</div>
+</div>
+<div id="listData">hari,veena,jaya</div>
+<template id="listTemplate">
+	<li></li>
+</template>
+</body>
+</html>
+<script type="text/javascript">
+var template = document.querySelector('#listTemplate');
+var host = document.querySelector('#listData');
+var csvText = host.innerHTML;
+var root = host.createShadowRoot();
+var names = csvText.split(",");
+for(index in names ) {
+	console.log("Adding "+names[index]);
+	var clone = document.importNode(template.content, true);
+	console.log(clone);
+	clone.childNodes[1].appendChild(document.createTextNode(names[index]));
+	root.appendChild(clone);
+}
+alert(document.querySelector('#listData').innerHTML);
+</script>
